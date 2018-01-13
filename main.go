@@ -26,7 +26,8 @@ func main() {
 	var (
 		user  = flag.String("user", "", "string flag")
 		body  = flag.String("body", "", "string flag")
-		title = flag.String("title", "", "string flag")
+		title = flag.String("title", "No Title", "string flag")
+		repo  = flag.String("repo", "memo", "string flag")
 	)
 	flag.Var(&labelargs, "labels", "Data values.")
 	flag.Parse()
@@ -47,8 +48,13 @@ func main() {
 		Labels:   &labels,
 	}
 
-	issue, _, err := client.Issues.Create(oauth2.NoContext, "swfz", "memo", opt)
+	issue, _, err := client.Issues.Create(oauth2.NoContext, *user, *repo, opt)
 	// pp.Print(client.Issues)
-	pp.Print(issue)
-	pp.Print(err)
+	// pp.Print(opt)
+	// pp.Print(issue)
+	if err != nil {
+		pp.Print(err)
+		return
+	}
+	fmt.Printf("https://github.com/%v/%v/issues/%v", *user, *repo, *issue.Number)
 }
